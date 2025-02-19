@@ -1,0 +1,32 @@
+{
+  "name": "tiled-ai-tagger",
+  "version": "1.0.0",
+  "description": "AI-powered tile tagging plugin for Tiled Map Editor",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "npm run build:ts && npm run build:server && npm run package",
+    "build:ts": "tsc",
+    "build:server": "pyinstaller --onefile --target-platform windows --distpath ./dist/server server/main.py",
+    "package": "node scripts/package.js",
+    "install-plugin": "node scripts/install.js && node scripts/install-server.js",
+    "install-server": "node scripts/install-server.js",
+    "install-all": "npm run install-plugin"
+  },
+  "keywords": [
+    "tiled",
+    "plugin",
+    "ai",
+    "tagging"
+  ],
+  "author": "Birdsmith",
+  "license": "MIT",
+  "devDependencies": {
+    "@mapeditor/tiled-api": "^1.11.0",
+    "@types/node": "^20.17.19",
+    "archiver": "^7.0.1",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.17.0"
+  }
+}

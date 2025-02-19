@@ -1,8 +1,22 @@
+# ML Dependencies
 tensorflow==2.18.0
 torch==2.2.1
-pytest==8.0.1
+torchvision==0.17.1
 numpy==1.26.4
 Pillow==10.2.0
+
+# Server Dependencies
+fastapi==0.109.2
+uvicorn==0.27.1
+python-multipart==0.0.9
+pydantic==2.6.1
+pydantic-settings==2.1.0
+
+# Development Dependencies
+pytest==8.0.1
+python-dotenv==1.0.1
+httpx==0.26.0  # For testing FastAPI
+
+# Optional Dependencies
 langchain==0.1.9
-openai==1.12.0
-python-dotenv==1.0.1 
+openai==1.12.0 
