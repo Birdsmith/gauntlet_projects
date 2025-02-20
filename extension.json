@@ -1,0 +1,9 @@
+{
+    "name": "tiled-ai-tagger",
+    "version": "1.0.0",
+    "type": "script",
+    "author": "Riley Smith",
+    "description": "AI-powered tile tagging plugin for Tiled Map Editor",
+    "tiled-version": "1.10.1",
+    "main": "index.js"
+} 

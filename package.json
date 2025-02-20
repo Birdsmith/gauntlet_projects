@@ -1,5 +1,11 @@
 {
-  "devDependencies": {
-    "@types/jest": "^29.5.14"
+  "name": "tiled-ai-tagger",
+  "version": "1.0.0",
+  "description": "AI-powered tile tagging plugin for Tiled Map Editor",
+  "scripts": {
+    "install-plugin": "node scripts/install.js"
+  },
+  "dependencies": {
+    "openai": "^4.28.0"
   }
 }
