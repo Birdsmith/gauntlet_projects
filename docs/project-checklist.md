@@ -1,102 +1,73 @@
 # Project Checklist - Tiled AI Tagger
 
 ## Architecture Changes
-- [x] Restructure project into client-server architecture
-  - [ ] JavaScript plugin (client)
-  - [x] Python server (backend)
-  - [ ] Communication protocol between them
+- [x] Restructure project to use direct API calls
+  - [x] JavaScript plugin (standalone)
+  - [x] OpenAI Vision API integration
+  - [x] API key and configuration management
 
-## JavaScript Plugin (Client)
+## JavaScript Plugin
 - [x] Basic Tiled integration
   - [x] Plugin registration
   - [x] Menu items
   - [x] Action handlers
-- [ ] Convert current implementation to client-server model
-  - [ ] Remove direct ML functionality
-  - [ ] Add HTTP/WebSocket client
-  - [ ] Add error handling for server communication
+- [ ] Implement OpenAI Vision integration
+  - [ ] Add API key configuration
+  - [ ] Implement direct API calls
+  - [ ] Add error handling
   - [ ] Add loading states/progress indicators
-
-## Python Server (Backend)
-- [x] Create FastAPI/Flask server
-  - [x] Setup basic server structure
-  - [x] Define API endpoints
-  - [x] Add CORS support for local development
-  - [x] Add error handling
-- [x] Port existing ML functionality
-  - [x] Move TileTagger class to server
-  - [x] Adapt image processing for HTTP
-  - [x] Implement tag storage/retrieval
-- [x] Add server configuration
-  - [x] Environment variables
-  - [x] WSL-specific settings
-  - [x] Development/production configs
 
 ## Features to Implement
 - [x] Tile Analysis
-  - [x] Client: Send tile image to server
-  - [x] Server: Process image and return tags
-  - [ ] Client: Update Tiled UI with results
+  - [x] Prepare tile images for API
+  - [x] Make Vision API calls
+  - [ ] Update Tiled UI with results
 - [x] Batch Processing
-  - [x] Client: Send multiple tiles
-  - [x] Server: Process batch efficiently
+  - [x] Group tiles for efficient API usage
+  - [x] Handle rate limiting
   - [ ] Progress tracking
 - [x] Similar Tile Search
-  - [x] Move search logic to server
+  - [x] Implement local search logic
   - [x] Optimize for larger tilesets
 - [x] Tag Statistics
-  - [x] Server-side calculation
-  - [x] Caching strategy
+  - [x] Local calculation
+  - [x] Result caching
 
 ## Development Setup
 - [ ] Local Development
-  - [ ] WSL setup instructions
-  - [x] Server auto-reload
+  - [ ] API key setup instructions
   - [x] Debug configuration
 - [x] Testing
-  - [x] Server unit tests
-  - [ ] Client unit tests
+  - [x] Unit tests
   - [ ] Integration tests
-  - [ ] WSL-specific tests
+  - [ ] API mock tests
 
 ## Documentation
 - [ ] Architecture Overview
 - [x] API Documentation
 - [ ] Setup Instructions
-  - [ ] WSL requirements
-  - [ ] Python dependencies
-  - [ ] Tiled plugin installation
+  - [ ] API key configuration
+  - [ ] Plugin installation
 - [ ] Development Guide
 - [ ] User Guide
 
 ## Deployment
 - [ ] Package Structure
   - [ ] JavaScript plugin package
-  - [x] Python server package
 - [ ] Installation Script
-  - [ ] Server setup in WSL
   - [ ] Plugin installation in Tiled
 - [ ] Update Mechanism
   - [ ] Plugin updates
-  - [ ] Server updates
 
 ## New Tasks
-- [ ] Create WSL Development Environment
-  - [ ] Setup script for WSL
-  - [ ] Environment variable configuration
-  - [ ] Path mapping for Windows/WSL
-- [ ] Server Management
-  - [ ] Service file for automatic startup
-  - [ ] Log rotation
-  - [ ] Health monitoring
-- [ ] Client-Server Communication
-  - [ ] Error handling strategy
-  - [ ] Retry mechanism
-  - [ ] Connection status indicator
+- [ ] API Management
+  - [ ] Secure API key storage
+  - [ ] Rate limit handling
+  - [ ] Error recovery
 - [ ] Performance Optimization
   - [ ] Image compression before upload
-  - [ ] Batch size tuning
-  - [ ] Cache management
+  - [ ] Batch size optimization
+  - [ ] Response caching
 
 ## Project Setup & Initial Research
 - [x] Review project requirements and scope
@@ -119,17 +90,15 @@
 
 ## AI-Powered Tile Tagging
 ### Research & Design
-- [x] Research image classification models
-  - [x] Evaluate TensorFlow vs PyTorch options
-    - Selected PyTorch for better integration
-    - Dynamic computation graphs for interactive use
-  - [x] Identify suitable pre-trained models
-    - ResNet/EfficientNet from torchvision
-    - Fine-tuning capability for tiles
-  - [x] Document model requirements and limitations
-    - Input: Tile images (16x16 to 64x64)
-    - Output: Multi-label classification
-    - Performance: Lightweight, real-time inference
+- [x] Research image analysis options
+  - [x] Selected OpenAI Vision API for tile analysis
+    - Platform-independent solution
+    - No local ML dependencies required
+    - Robust image understanding capabilities
+  - [x] Document API requirements and limitations
+    - Input: Base64 encoded tile images
+    - Output: Natural language descriptions and tags
+    - Rate limiting considerations
 - [x] Design tile tagging system architecture
   - [x] Define tag taxonomy and structure
     - Hierarchical categories (terrain, objects, attributes)
@@ -137,7 +106,7 @@
     - Extensible tag hierarchy
   - [x] Plan data storage format for tags
     - JSON-based metadata structure
-    - Confidence scores for AI predictions
+    - Confidence scores from API responses
     - Custom properties support
   - [x] Design API for tag management
     - Core CRUD operations
@@ -147,17 +116,17 @@
 ### Implementation
 - [x] Implement tile analysis system
   - [x] Create image preprocessing pipeline
-    - Resize to 64x64
-    - Normalize using ImageNet stats
-    - Convert to tensor
-  - [x] Integrate chosen ML model
-    - ResNet18 backbone
-    - Custom classification head
-    - Multi-label output
-  - [x] Implement tile feature extraction
-    - Confidence thresholding
-    - JSON tag format
-    - Custom property storage
+    - Image format conversion
+    - Base64 encoding
+    - Batch preparation
+  - [x] Integrate OpenAI Vision API
+    - API key management
+    - Error handling
+    - Rate limiting
+  - [x] Implement response parsing
+    - Natural language to structured tags
+    - Confidence scoring
+    - Error recovery
 - [x] Develop tag management system
   - [x] Create tag storage system
     - Tiled custom properties

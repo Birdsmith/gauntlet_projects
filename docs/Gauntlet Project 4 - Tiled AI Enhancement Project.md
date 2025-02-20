@@ -19,11 +19,7 @@ This project is designed for:
 This project will introduce **two major features**:
 
 1. **AI-Powered Tile Tagging & Natural Language Map Generation**: AI will analyze tilesets, automatically tag them based on content (e.g., "water," "grass," "wall"), and use those tags to generate maps based on user prompts (e.g., "Generate a forest path leading to a castle").  
-2. **Non-AI Features: Contiguous Option for Bucket Fill and Magic Wand Tools, and User-Defined Zoom Levels**: Two new features that enhance Tiled’s usability for level designers.
-
-## 
-
-## 
+2. **Non-AI Features: Contiguous Option for Bucket Fill and Magic Wand Tools, and User-Defined Zoom Levels**: Two new features that enhance Tiled's usability for level designers.
 
 ## **Features**
 
@@ -88,27 +84,23 @@ This project will introduce **two major features**:
 * Modify the zoom function to include user-defined levels in addition to default presets.  
 * Ensure smooth transitions between zoom levels to maintain a seamless editing experience.
 
-## 
-
-## 
-
 ## **Technical Stack Considerations**
 
 | Component | Technology |
 | ----- | ----- |
-| **AI Model** | OpenAI GPT-4 / Image Classification Models |
-| **Tile Tagging** | CNN-based image recognition (TensorFlow/PyTorch) |
-| **Natural Language Processing** | LLM-based parser (e.g., GPT, LangChain) |
-| **Backend** | Node.js / Python |
+| **Image Analysis** | OpenAI Vision API (GPT-4V) |
+| **Tile Tagging** | OpenAI Vision API for feature detection |
+| **Natural Language Processing** | OpenAI GPT-4 / LangChain |
+| **Backend** | Node.js / FastAPI |
 | **Frontend (Tiled Plugin)** | C++ / Qt (for Tiled integration) |
 
 ## **User Flow**
 
-1. **AI Tags Tiles**: The user loads a tileset, and AI assigns tags based on tile content.  
-2. **User Searches for Tiles by Tag**: Tags make it easy to find the right tiles.  
-3. **User Enters Map Description**: The user types "A castle on a hill with a river running through it."  
-4. **AI Generates Map Layout**: AI places basic terrain tiles based on description.  
-5. **User Edits & Refines**: The designer tweaks the layout manually.  
+1. **AI Tags Tiles**: The user loads a tileset, and OpenAI Vision API analyzes and assigns tags based on tile content.
+2. **User Searches for Tiles by Tag**: Tags make it easy to find the right tiles.
+3. **User Enters Map Description**: The user types "A castle on a hill with a river running through it."
+4. **AI Generates Map Layout**: GPT-4 interprets the description and places tiles accordingly.
+5. **User Edits & Refines**: The designer tweaks the layout manually.
 6. **Implement Contiguous Option & User-Defined Zoom Levels**: Ensuring these usability features are working as intended.
 
 ## **Timeline & Milestones**
