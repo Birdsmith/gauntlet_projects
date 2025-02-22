@@ -1,0 +1,9 @@
+{
+    "name": "tiled-ai-mapgen",
+    "version": "1.0.0",
+    "type": "script",
+    "author": "AI Assistant",
+    "description": "AI-powered map generation plugin for Tiled Map Editor",
+    "tiled-version": "1.10.1",
+    "main": "index.js"
+} 

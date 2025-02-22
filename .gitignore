@@ -34,4 +34,8 @@ Thumbs.db
 # Tiled backup files
 *.tmx~
 *.tsx~
-*.world~ 
+*.world~
+
+# Dependencies
+node_modules/
+.package-lock.json 
