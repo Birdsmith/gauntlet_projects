@@ -118,7 +118,7 @@ function analyzeTileBatch(tileDataArray, callback) {
             callback(new Error("Please configure your OpenAI API key in the settings"));
             return;
         }
-
+        //          "   - Use existing tags when possible rather than creating new variations",
         // Create content array with all tiles
         const content = [
             {
@@ -126,60 +126,59 @@ function analyzeTileBatch(tileDataArray, callback) {
                 text: [
                     "I will show you several pixel art tiles from a game tileset. For each tile, analyze and provide the following in JSON format.",
                     "",
-                    "IMPORTANT - Directions are defined as follows:",
-                    "         NORTH (top)",
-                    "            ^",
-                    "            |",
-                    "WEST <--  TILE  --> EAST",
-                    "            |",
-                    "            v",
-                    "        SOUTH (bottom)",
+                    "TILE CLASSIFICATION RULES:",
+                    "1. Each tile must be classified as either 'open' or 'closed':",
+                    "   - 'open': Tiles that can be walked on/through (e.g., grass, sand, path, water, walkable stairs, doorways)",
+                    "   - 'closed': Tiles that block movement (e.g., walls, rocks, buildings, blocked stairs, locked doors)",
                     "",
-                    "CRITICAL RULES FOR CONNECTIONS AND WALLS:",
-                    "1. Terrain Types and Connections:",
-                    "   - Natural terrain (sand, grass, water, etc.) is ALWAYS considered connectable",
-                    "   - If a side has terrain visible, it MUST have a connection in that direction",
-                    "   - Example: If there's sand at the bottom of a tile, it MUST have a south connection",
+                    "2. Each tile must be given a single descriptive tag that best identifies it:",
+                    "   - Some examples of but not limited to tags: 'grass', 'stone wall', 'dirt path', 'cave wall', 'sand', 'water', 'stone stairs', 'wooden stairs', 'stone doorway', 'wooden doorway'",
+                    "   - The tag should be simple and clear",
                     "",
-                    "2. Walls and Blocking Elements:",
-                    "   - Only solid structures (walls, buildings, fences, etc.) count as walls",
-                    "   - Natural terrain is NEVER a wall, even at tile edges",
-                    "   - Example: A tile with a stone wall at the top and sand at the bottom has walls:\"north\" and connections:\"south\"",
+                    "CRITICAL STAIR IDENTIFICATION PATTERNS:",
+                    "   - Common stair visual indicators:",
+                    "     * Diagonal lines or edges that suggest elevation change",
+                    "     * Repeating horizontal or vertical lines that look like steps",
+                    "     * Corner pieces with one edge higher than the other",
+                    "     * Shading that suggests depth or height differences",
                     "",
-                    "3. Logical Relationships:",
-                    "   - If a tile has a wall in a direction, it CANNOT have a connection in that direction",
-                    "   - If a tile has no terrain or opening in a direction, it MUST have a wall in that direction",
-                    "   - Completely open terrain tiles should have connections in all directions and no walls",
+                    "   - Corner Stair Specific Patterns:",
+                    "     * L-shaped or diagonal division in the tile texture",
+                    "     * One side of corner appears raised/higher than the other",
+                    "     * Texture changes across the diagonal divide",
+                    "     * Dark corner pieces with ANY of these features:",
+                    "       - Diagonal line separating two different height levels",
+                    "       - Subtle ridges or lines parallel to the diagonal",
+                    "       - Metallic or stone texture with geometric patterns",
+                    "       - One side appears to be the 'top' of the stairs",
                     "",
-                    "For each tile, provide:",
-                    "- terrain_type: The primary terrain or surface type. Use your judgment to identify the main terrain material or surface. Some examples include: grass, stone, water, sand, wood, metal, lava, ice - but feel free to use any appropriate terrain type you observe.",
-                    "- object_type: Any distinct object or feature in the tile. Examples like tree, wall, flower are just suggestions - identify whatever object or feature you see, such as: door, window, fence, bridge, statue, torch, etc.",
-                    "- color_scheme: Main colors used in the pixel art. Be specific about the colors you observe, including variations like 'dark blue', 'pale yellow', or combinations like 'red and gold'.",
-                    "- game_context: Suggested game context or biome. While examples like 'forest level' or 'dungeon' are common, use any appropriate context you observe: castle interior, desert oasis, space station, underwater ruins, etc.",
-                    "- connections: Describe which sides of the tile can connect to similar tiles (where movement/continuation is possible). Format as a comma-separated list using ONLY: north, south, east, west. Examples:",
-                    "  - For a pure sand tile: \"north,south,east,west\" (terrain connects in all directions)",
-                    "  - For a wall with sand below: \"south\" (only the sand terrain can connect)",
-                    "  - For a building corner with grass around: \"north,west\" (grass connects where there's no building)",
-                    "  - For a solid rock face: \"\" (no connections, all sides are walls)",
-                    "  Remember: north=top, south=bottom, east=right, west=left",
-                    "- walls: Describe which sides of the tile have solid elements that need to align with other walls. Must correspond to blocked connections. Format as a comma-separated list using ONLY: north, south, east, west. Examples:",
-                    "  - For a pure sand tile: \"\" (no walls, terrain connects everywhere)",
-                    "  - For a wall with sand below: \"north,east,west\" (walls where there's no sand)",
-                    "  - For a building corner with grass around: \"south,east\" (building walls only)",
-                    "  - For a solid rock face: \"north,south,east,west\" (solid walls all around)",
-                    "  Remember: Always use the cardinal directions relative to the tile's orientation (north=top, south=bottom, east=right, west=left)",
-                    "- description: A brief but detailed description of what this tile represents. Be specific about notable features and arrangements you observe.",
+                    "   - Specific stair patterns to look for:",
+                    "     * Corner stairs: Look for diagonal lines meeting at corners",
+                    "     * Straight stairs: Look for parallel lines suggesting steps",
+                    "     * Dark stairs: Even in dark textures, look for subtle line patterns indicating steps",
+                    "     * Metallic stairs: May have grid patterns or industrial step textures",
                     "",
-                    "IMPORTANT: Your response must be a valid JSON array of objects. Do NOT use markdown formatting or code blocks. Format exactly like this example, starting with [ and ending with ]:",
+                    "   - When to classify as stairs:",
+                    "     * ANY diagonal lines that could represent elevation change",
+                    "     * ANY repeating horizontal/vertical lines that could be steps",
+                    "     * ANY corner pieces where one side appears higher than the other",
+                    "     * When in doubt between wall and stairs, prefer stairs if there's ANY hint of steps",
+                    "     * ESPECIALLY for corner pieces: if there's a diagonal divide with different textures/heights,",
+                    "       it's most likely stairs - classify as 'stone stairs' or 'wooden stairs'",
+                    "",
+                    "DOORWAY IDENTIFICATION:",
+                    "   - Doorways are openings in walls that allow passage - classify as 'stone doorway' or 'wooden doorway'",
+                    "   - A doorway is always 'open' type unless it contains a closed/locked door",
+                    "",
+                    "IMPORTANT: Your response must be a valid JSON array of objects. Format exactly like these examples:",
                     "[",
                     "  {",
-                    "    \"terrain_type\": \"sand\",",
-                    "    \"object_type\": \"wall\",",
-                    "    \"color_scheme\": \"beige and olive green\",",
-                    "    \"game_context\": \"desert fortress\",",
-                    "    \"connections\": \"east,west,south\",",
-                    "    \"walls\": \"north\",",
-                    "    \"description\": \"A desert wall segment with stone blocks on top and open sand below, allowing connections to other sand tiles at the bottom and similar wall segments on both sides\"",
+                    "    'type': 'open',",
+                    "    'tag': 'stone stairs'",
+                    "  },",
+                    "  {",
+                    "    'type': 'closed',",
+                    "    'tag': 'stone wall'",
                     "  }",
                     "]",
                     "",
@@ -226,7 +225,7 @@ function analyzeTileBatch(tileDataArray, callback) {
                 }
             ],
             max_tokens: 1500,
-            temperature: .5
+            temperature: 1
         };
 
         tiled.log("Sending request with body: " + JSON.stringify(requestBody, null, 2));
@@ -294,10 +293,21 @@ function analyzeTileBatch(tileDataArray, callback) {
 
 // Process tiles in batches
 function processTileBatches(tileset, batchSize = 1) {
-    const totalTiles = tileset.tileCount;
+    // Get all valid tiles from the tileset
+    const tiles = [];
+    for (let i = 0; i < tileset.tileCount; i++) {
+        const tile = tileset.tile(i);
+        if (tile) {
+            tiles.push(tile);
+        }
+    }
+
+    const totalTiles = tiles.length;
     const batches = Math.ceil(totalTiles / batchSize);
     let processedCount = 0;
     let currentBatch = 0;
+
+    tiled.log(`Found ${totalTiles} valid tiles in tileset`);
 
     function processBatch() {
         if (currentBatch >= batches) {
@@ -315,16 +325,15 @@ function processTileBatches(tileset, batchSize = 1) {
         const endIdx = Math.min(startIdx + batchSize, totalTiles);
         tiled.log(`Processing batch ${currentBatch + 1}/${batches} (tiles ${startIdx + 1}-${endIdx})`);
 
+        // Process the pre-validated tiles
         for (let i = startIdx; i < endIdx; i++) {
-            const tile = tileset.tile(i);
-            if (tile) {
-                tiled.log(`Processing tile ${i + 1}`);
-                const base64Image = tileToBase64(tile);
-                if (base64Image) {
-                    batchTiles.push(base64Image);
-                    tileRefs.push(tile);
-                    tiled.log(`Successfully prepared tile ${i + 1} for analysis`);
-                }
+            const tile = tiles[i];
+            tiled.log(`Processing tile ${i + 1}`);
+            const base64Image = tileToBase64(tile);
+            if (base64Image) {
+                batchTiles.push(base64Image);
+                tileRefs.push(tile);
+                tiled.log(`Successfully prepared tile ${i + 1} for analysis`);
             }
         }
 
@@ -340,8 +349,12 @@ function processTileBatches(tileset, batchSize = 1) {
                     batchResults.forEach((analysis, index) => {
                         if (analysis && tileRefs[index]) {
                             tiled.log(`Processing analysis for tile ${startIdx + index + 1}`);
-                            for (const [key, value] of Object.entries(analysis)) {
-                                addCustomProperty(tileRefs[index], key, value);
+                            // Only set the type and tag properties
+                            if (analysis.type) {
+                                addCustomProperty(tileRefs[index], 'type', analysis.type);
+                            }
+                            if (analysis.tag) {
+                                addCustomProperty(tileRefs[index], 'tag', analysis.tag);
                             }
                             tiled.log(`Completed processing for tile ${startIdx + index + 1}`);
                         }
